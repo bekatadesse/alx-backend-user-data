@@ -13,23 +13,31 @@ class Auth:
         pass
 
     def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
-        """
-        public method require_auth
+        """ Method for validating if endpoint requires auth """
+        if path is None or excluded_paths is None or excluded_paths == []:
+            return True
 
-        Returns:
-            False or True
-        """
-        if path is None:
+        l_path = len(path)
+        if l_path == 0:
             return True
-        if excluded_paths is None or len(excluded_paths) == 0:
-            return True
-        if path[-1] != '/':
-            path += '/'
-        if excluded_paths[-1] != '/':
-            excluded_paths += '/'
-        if path in excluded_paths:
-            return False
-        return True
+
+        slash_path = True if path[l_path - 1] == '/' else False
+
+        tmp_path = path
+        if not slash_path:
+            tmp_path += '/'
+
+        for exc in excluded_paths:
+            l_exc = len(exc)
+            if l_exc == 0:
+                continue
+
+            if exc[l_exc - 1] != '*':
+                if tmp_path == exc:
+                    return False
+            else:
+                if exc[:-1] == path[:l_exc - 1]:
+                    return False
 
     def authorization_header(self, request=None) -> str:
         """
