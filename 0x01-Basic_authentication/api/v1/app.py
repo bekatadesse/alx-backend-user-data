@@ -59,7 +59,7 @@ def before_request() -> str:
     if auth.authorization_header(request) is None:
         abort(401)
 
-    if auth.current_user(request) is None:
+    if request.current_user(request) is None:
         abort(403)
 
 
