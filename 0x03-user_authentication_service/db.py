@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """DB module
 """
 from sqlalchemy import create_engine
@@ -7,6 +8,7 @@ from sqlalchemy.orm.session import Session
 from typing import TypeVar
 
 from user import Base, User
+
 
 class DB:
     """DB class
