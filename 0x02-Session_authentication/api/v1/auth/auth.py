@@ -1,16 +1,13 @@
 #!/usr/bin/env python3
-"""Module of class auth"""
+""" Module of Authentication
+"""
 from flask import request
 from typing import List, TypeVar
+from os import getenv
 
 
 class Auth:
-    """
-    class Auth
-    """
-    def __init__(self):
-        """method constructor"""
-        pass
+    """ Class to manage the API authentication """
 
     def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
         """ Method for validating if endpoint requires auth """
@@ -42,21 +39,27 @@ class Auth:
         return True
 
     def authorization_header(self, request=None) -> str:
-        """
-        public method authorization_header
-
-        Returns:
-            None
-        """
+        """ Method that handles authorization header """
         if request is None:
             return None
+
         return request.headers.get("Authorization", None)
 
     def current_user(self, request=None) -> TypeVar('User'):
-        """
-        public method current_user
-
-        Returns:
-            None
-        """
+        """ Validates current user """
         return None
+
+    def session_cookie(self, request=None):
+        """Returns a cookie value from a request"""
+
+        if request is None:
+            return None
+
+        SESSION_NAME = getenv("SESSION_NAME")
+
+        if SESSION_NAME is None:
+            return None
+
+        session_id = request.cookies.get(SESSION_NAME)
+
+        return session_id
